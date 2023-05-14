@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53cf65e9cbc4ea540881e03ca25ca564, type: 3}
   m_Name: Sherlock Holmes
   m_EditorClassIdentifier: 
-  characterIndex: 0
+  characterIndex: 3
   character_name: Holmes
   order: 1
   maxMove: 3

@@ -86,7 +86,7 @@ public class CharacterTile : MonoBehaviour
                 handLight_rt.rotation = Quaternion.Euler(0, 0, 90f);
                 break;
             case 1:
-                handLight_rt.rotation = Quaternion.Euler(0, 0, 20f);
+                handLight_rt.rotation = Quaternion.Euler(0, 0, 30f);
                 break;
             case 2:
                 handLight_rt.rotation = Quaternion.Euler(0, 0, -20f);

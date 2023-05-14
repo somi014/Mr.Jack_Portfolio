@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53cf65e9cbc4ea540881e03ca25ca564, type: 3}
   m_Name: Inspector Lestrade
   m_EditorClassIdentifier: 
-  characterIndex: 3
+  characterIndex: 4
   character_name: Lestrade
   order: 2
   maxMove: 3

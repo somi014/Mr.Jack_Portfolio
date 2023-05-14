@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53cf65e9cbc4ea540881e03ca25ca564, type: 3}
   m_Name: Sergreant Goodley
   m_EditorClassIdentifier: 
-  characterIndex: 5
+  characterIndex: 1
   character_name: Goodley
   order: 2
   maxMove: 3

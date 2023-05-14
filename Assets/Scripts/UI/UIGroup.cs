@@ -14,6 +14,8 @@ public class UIGroup : MonoBehaviour
     [SerializeField] Transform greenCard_popup;
     Transform popup_cur;
 
+    Image[] turn_img;
+
     Button round_btn;
     TextMeshProUGUI round_txt;
 
@@ -29,7 +31,7 @@ public class UIGroup : MonoBehaviour
     int redCard_index;
     [SerializeField] Image[] greenCard;
 
-    bool canClick = true;         
+    bool canClick = true;
     public bool CanClickUI
     {
         get => canClick;
@@ -53,6 +55,12 @@ public class UIGroup : MonoBehaviour
         redCard_popup.localScale = Vector3.zero;
         greenCard_popup.localScale = Vector3.zero;
 
+        turn_img = new Image[4];
+        for (int i = 0; i < turn_img.Length; i++)
+        {
+            turn_img[i] = transform.FindGameObject<Image>("TurnOrder_" + i).transform.GetChild(0).GetComponent<Image>();
+        }
+
         round_btn = transform.FindGameObject<Button>("TurnGroup");
         round_txt = transform.FindGameObject<TextMeshProUGUI>("Round_text");
 
@@ -72,6 +80,12 @@ public class UIGroup : MonoBehaviour
     public void SetRoundText(int _round)
     {
         round_txt.text = _round.ToString();
+
+        bool round_boolen = _round % 2 == 1;        //홀수 라운드에서는 이미지 활성화
+        for (int i = 0; i < turn_img.Length; i++)
+        {
+            turn_img[i].enabled = round_boolen;
+        }
     }
 
     public void SetJackExposed(bool _exposed)

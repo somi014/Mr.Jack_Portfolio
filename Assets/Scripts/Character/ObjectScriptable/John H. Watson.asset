@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53cf65e9cbc4ea540881e03ca25ca564, type: 3}
   m_Name: John H. Watson
   m_EditorClassIdentifier: 
-  characterIndex: 1
+  characterIndex: 7
   character_name: Watson
   order: 1
   maxMove: 3

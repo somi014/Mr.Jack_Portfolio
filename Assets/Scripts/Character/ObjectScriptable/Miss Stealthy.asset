@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53cf65e9cbc4ea540881e03ca25ca564, type: 3}
   m_Name: Miss Stealthy
   m_EditorClassIdentifier: 
-  characterIndex: 4
+  characterIndex: 6
   character_name: Stealthy
   order: 0
   maxMove: 4

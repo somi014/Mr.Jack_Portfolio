@@ -64,7 +64,7 @@ public class GameManager : MonoBehaviourPun
         set => turn_cur = value;
     }
 
-    public readonly int round_max = 4;      //임시
+    public readonly int round_max = 8;
     public readonly int turn_max = 4;
 
     public int mapType_index = 0;                   //현재 선택해야하는 타일맵의 종류(ex. 가로등 선택)
@@ -106,6 +106,7 @@ public class GameManager : MonoBehaviourPun
 
     List<PlayTypes> odd_turn = new List<PlayTypes> { PlayTypes.COP, PlayTypes.JACK, PlayTypes.JACK, PlayTypes.COP };    //홀수 턴
     List<PlayTypes> even_turn = new List<PlayTypes> { PlayTypes.JACK, PlayTypes.COP, PlayTypes.COP, PlayTypes.JACK };   //짝수 턴
+    string turn_name;                                   //현재 차례인 플레이 타입
 
     public bool master() => PhotonNetwork.LocalPlayer.IsMasterClient;
 
@@ -172,13 +173,28 @@ public class GameManager : MonoBehaviourPun
 
         if (round_cur % 2 == 1)   //홀수 라운드
         {
-            myTurn = playType == odd_turn[turn_cur - 1];
+            myTurn = playType == odd_turn[turn_cur - 1];          
+            if(odd_turn[turn_cur -1] == PlayTypes.COP)
+            {
+                turn_name = "경찰";
+            }
+            else
+            {
+                turn_name = "잭";
+            }
         }
         else
         {
             myTurn = playType == even_turn[turn_cur - 1];
+            if (even_turn[turn_cur - 1] == PlayTypes.COP)
+            {
+                turn_name = "경찰";
+            }
+            else
+            {
+                turn_name = "잭";
+            }
         }
-        Debug.Log("next round " + round_cur + " turn " + turn_cur);
     }
 
     #endregion
@@ -210,7 +226,7 @@ public class GameManager : MonoBehaviourPun
                 }
                 else
                 {
-                    state_txt.text = "라운드 " + round_cur + "\n차례 " + turn_cur + " 번째 턴";     //범인인지 경찰인지 !!!
+                    state_txt.text = "라운드 : " + round_cur + "\n" + turn_name + " 차례 " + turn_cur + " 번째 턴";  
                     yield return StartCoroutine(IEStateTextUpdate());
 
                     gameState = GameState.SELECT;
@@ -242,7 +258,7 @@ public class GameManager : MonoBehaviourPun
             }
             else if (gameState == GameState.CHECK)
             {
-                if (round_cur <= 4 && turn_cur == turn_max)
+                if (round_cur <= round_max && turn_cur == turn_max)
                 {
                     state_txt.text = "목격된 캐릭터 확인 & 가로등 제거";
                 }
@@ -253,9 +269,9 @@ public class GameManager : MonoBehaviourPun
                 yield return StartCoroutine(IEStateTextUpdate());
 
                 //가로등 제거
-                if (round_cur <= 4 && turn_cur == turn_max)
+                if (round_cur <= round_max && turn_cur == turn_max)
                 {
-                    TileManager.Instance.DeleteLight();     
+                    TileManager.Instance.DeleteLight();
                 }
 
                 //캐릭터 노출되었는지
@@ -268,32 +284,37 @@ public class GameManager : MonoBehaviourPun
             }
             else if (gameState == GameState.DONE)
             {
-                if (turn_cur <= 4)
+                if (round_cur == round_max)
                 {
-                    gameState = GameState.START;
-                    isPlaying = true;
-                }
-                else
-                {
-                    if (round_cur == round_max)
+                    //잭 승리 (끝날때까지 잡히지 않았음)
+                    if (turn_cur == turn_max)
                     {
-                        //잭 승리 (끝날때까지 잡히지 않았음)
                         GameOver(true);
-
                         break;
                     }
-                    else
-                    {
-                        state_txt.text = "턴 종료";
-                        yield return StartCoroutine(IEStateTextUpdate());
-
-                        isPlaying = false;
-                    }
+                    Debug.Log("end");
                 }
+                //else
+                //{
+                //    //if (turn_cur <= turn_max)
+                //    {
+                //        gameState = GameState.START;
+                //        isPlaying = true;
+                //    }
+                //    //else
+                //    //{
+                //    //    state_txt.text = "턴 종료";
+                //    //    yield return StartCoroutine(IEStateTextUpdate());
+
+                //    //    isPlaying = false;
+                //    //}
+                //}
+
+                gameState = GameState.START;
+                isPlaying = true;
             }
         }
     }
-
 
     #region 게임 진행 텍스트 표시
     private IEnumerator IEStateTextUpdate()

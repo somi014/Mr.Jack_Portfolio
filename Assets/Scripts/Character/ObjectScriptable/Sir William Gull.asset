@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53cf65e9cbc4ea540881e03ca25ca564, type: 3}
   m_Name: Sir William Gull
   m_EditorClassIdentifier: 
-  characterIndex: 6
+  characterIndex: 2
   character_name: Gull
   order: 3
   maxMove: 3

@@ -32,14 +32,14 @@ public class PlayUIGroup : MonoBehaviourPun
     Button move_btn;
     Button skill_btn;
 
-    private int[] redCard_index;            //알리바이 카드 순서
+    private int[] redCard_index;                    //알리바이 카드 순서
     public int[] RedCard_Index
     {
         get => redCard_index;
         set => redCard_index = value;
     }
 
-    [SerializeField] private int[] greenCard_index;          //캐릭터 카드 순서        //SerializeField 지우기
+    private int[] greenCard_index;                  //캐릭터 카드 순서    
     public int[] GreenCard_Index
     {
         get => greenCard_index;
@@ -59,14 +59,14 @@ public class PlayUIGroup : MonoBehaviourPun
     private bool redCard_open = false;
     private bool greenCard_open = false;
 
-    private bool move_done;                 //캐릭터 이동 완료했는지
+    private bool move_done;                         //캐릭터 이동 완료했는지
     public bool Move_Done
     {
         get => move_done;
         set => move_done = value;
     }
 
-    private bool skill_done;                //캐릭터 스킬 사용 했는지
+    private bool skill_done;                        //캐릭터 스킬 사용 했는지
     public bool Skill_Done
     {
         get => skill_done;
@@ -75,9 +75,10 @@ public class PlayUIGroup : MonoBehaviourPun
 
     [SerializeField] Sprite[] innocentCard_img;
     [SerializeField] Sprite[] characterCard_img;
-    [SerializeField] Sprite[] jackCard_img;     //0 exposed 1 unexposed
+    [SerializeField] Sprite[] jackCard_img;         //0 exposed 1 unexposed
     [SerializeField] CharacterInfo[] charInfo;
 
+    [SerializeField] Sprite[] playType_img;         //0 cop,  1 jack
     [SerializeField] public AnimationCurve curve;
 
     private void Awake()
@@ -195,6 +196,8 @@ public class PlayUIGroup : MonoBehaviourPun
     {
         //미리 정해둔 플레이어의 타입을 반환하기로!
         playType_btn[_index].transform.GetComponentInChildren<TextMeshProUGUI>().text = GameManager.Instance.PlayType.ToString();
+
+        playType_btn[_index].GetComponent<Image>().sprite = playType_img[(int)GameManager.Instance.PlayType];
 
         pv.RPC(nameof(SyncTypeCard), RpcTarget.AllBufferedViaServer, _index);
     }
@@ -332,7 +335,8 @@ public class PlayUIGroup : MonoBehaviourPun
         //클릭한 사람은 카드 볼수 있게
         redCard_img[_index].color = new Vector4(1f, 1f, 1f, 1f);
 
-            int temp_index = redCard_btn[_index].GetComponent<CharaterCard>().CharInfo.CharacterIndex;
+        int temp_index = redCard_btn[_index].GetComponent<CharaterCard>().CharInfo.CharacterIndex;
+
         if (GameManager.Instance.gameState == GameManager.GameState.PLAYTYPE)
         {
             UIGroup.Instance.SetJackImage(temp_index);
@@ -670,7 +674,7 @@ public class PlayUIGroup : MonoBehaviourPun
         }
         else if (greenCard_open == true)
         {
-            if(_ui == false)
+            if (_ui == false)
             {
                 StartCoroutine(backgroud_cg.IEAlpha(curve, false, 5f));
                 StartCoroutine(greenCard_tr.transform.IESetScale(curve, Vector3.zero, 5f));
