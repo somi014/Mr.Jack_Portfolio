@@ -29,7 +29,6 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-        Debug.Log("NetworkManager start");
         if (string.IsNullOrEmpty(PlayerPrefs.GetString("USER_ID")) == false)
         {
             userId = PlayerPrefs.GetString("USER_ID", $"USER_{Random.Range(0, 100):00}");

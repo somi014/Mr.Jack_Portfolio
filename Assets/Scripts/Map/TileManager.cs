@@ -882,7 +882,6 @@ public class TileManager : MonoBehaviourPun
         {
             if (goodleyMove == false)       //이동할 캐릭터의 길찾기
             {
-                Debug.Log("find path " + charPos_list[str]);
                 string cell_name = dataOnTiles[cell].character_name;
                 previousPos = charPos_list[cell_name];                        //이동할 캐릭터의 위치를 저장
                 goodleySkill_name.Add(cell_name);
@@ -1077,7 +1076,6 @@ public class TileManager : MonoBehaviourPun
                 dataOnTiles[item.Key].light_num = -1;
                 lightNumber_tr[temp_round].gameObject.SetActive(false);
 
-                Debug.Log("delete light " + item.Key);
                 dataOnTiles[item.Key].isActive = false;
                 tilemap.SetTile(item.Key, dataOnTiles[item.Key].normalTile);
                 break;

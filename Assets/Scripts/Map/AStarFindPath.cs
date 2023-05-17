@@ -139,19 +139,16 @@ public class AStarFindPath : MonoBehaviour
 
     void OpenListAdd(int checkX, int checkY)
     {
-        Debug.Log(checkX + " " + checkY + " topRight.x : " + (topRight.x + 1) + ", topRight.y: " + (topRight.y + 1));
        if(checkX >= topRight.x + 1 || checkY >= topRight.y + 1)
         {
             return;
         }
-        //checkX >= bottomLeft.x && checkX < topRight.x + 1 && checkY >= bottomLeft.y && checkY < topRight.y + 1
 
         // 상하좌우 범위를 벗어나지 않고, 벽이 아니면서, 닫힌리스트에 없다면
         if (checkX >= bottomLeft.x && checkX < topRight.x + 1 && checkY >= bottomLeft.y && checkY < topRight.y + 1
             && !NodeArray[checkX - bottomLeft.x, checkY - bottomLeft.y].isWall 
             && !ClosedList.Contains(NodeArray[checkX - bottomLeft.x, checkY - bottomLeft.y]))
         {
-            //Debug.Log("open list first ");
             // 대각선 허용시, 벽 사이로 통과 안됨
             //if (allowDiagonal) 
             //    if (NodeArray[CurNode.x - bottomLeft.x, checkY - bottomLeft.y].isWall && 
@@ -163,14 +160,12 @@ public class AStarFindPath : MonoBehaviour
             //        NodeArray[checkX - bottomLeft.x, CurNode.y - bottomLeft.y].isWall) 
             //        return;
 
-            //Debug.Log("open list second");
             // 코너를 가로질러 가지 않을시, 이동 중에 수직수평 장애물이 있으면 안됨
             //if (dontCrossCorner)
             //    if (NodeArray[CurNode.x - bottomLeft.x, checkY - bottomLeft.y].isWall || 
             //        NodeArray[checkX - bottomLeft.x, CurNode.y - bottomLeft.y].isWall) 
             //        return;
 
-            //Debug.Log("open list third");
             // 이웃노드에 넣고, 직선은 10, 대각선은 14비용
             Node NeighborNode = NodeArray[checkX - bottomLeft.x, checkY - bottomLeft.y];
             //int MoveCost = CurNode.G + (CurNode.x - checkX == 0 || CurNode.y - checkY == 0 ? 10 : 14);
@@ -186,11 +181,6 @@ public class AStarFindPath : MonoBehaviour
                 OpenList.Add(NeighborNode);
             }
         }
-        else
-        {
-            //Debug.Log("cant add");
-        }
     }
-
 }
 

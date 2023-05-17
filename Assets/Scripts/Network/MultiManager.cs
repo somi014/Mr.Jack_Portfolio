@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
-using static GameManager;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 using CommonFunctions;
 
@@ -37,7 +36,6 @@ public class MultiManager : MonoBehaviourPunCallbacks
         }
     }
 
-
     /// <summary>
     /// 뒤에 들어온 플레이어가 있을 경우
     /// </summary>
@@ -45,13 +43,12 @@ public class MultiManager : MonoBehaviourPunCallbacks
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         base.OnPlayerEnteredRoom(newPlayer);
-        Debug.Log("networkManager enter room " + newPlayer.UserId);
 
         if (PhotonNetwork.CurrentRoom.PlayerCount == PhotonNetwork.CurrentRoom.MaxPlayers &&
           PhotonNetwork.IsMasterClient == true)
         {
             int temp_rand = Random.Range(0, 2);
-            Instance.pv.RPC(nameof(Instance.SetPlayType), RpcTarget.AllBufferedViaServer, temp_rand);
+            GameManager.Instance.pv.RPC(nameof(GameManager.Instance.SetPlayType), RpcTarget.AllBufferedViaServer, temp_rand);
         }
     }
 
@@ -74,5 +71,4 @@ public class MultiManager : MonoBehaviourPunCallbacks
             PhotonNetwork.LoadLevel("TitleScene");
         }
     }
-
 }
