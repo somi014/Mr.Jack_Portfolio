@@ -8,10 +8,10 @@ using Photon.Realtime;
 
 public class RoomData : MonoBehaviour
 {
-    TextMeshProUGUI roomName_txt;
-    RoomInfo roomInfo;
+    private TextMeshProUGUI roomName_txt;
+    private RoomInfo roomInfo;
 
-    NetworkManager networkManager;
+    private NetworkManager networkManager;
 
     public RoomInfo RoomInfo
     {
@@ -34,16 +34,14 @@ public class RoomData : MonoBehaviour
         roomName_txt = transform.GetComponentInChildren<TextMeshProUGUI>();
     }
 
-    public void OnEnterRoom(string _roomName)
-    {
-        Debug.Log("click room");
+    public void OnEnterRoom(string roomName)
+    {    
         RoomOptions option = new RoomOptions();
         option.IsOpen = true;
         option.IsVisible = true;
         option.MaxPlayers = 2;
 
-        //PhotonNetwork.NickName = GameManager.Instance.userNickName;
         PhotonNetwork.NickName = networkManager.userIdInput.text;
-        PhotonNetwork.JoinOrCreateRoom(_roomName, option, TypedLobby.Default);
+        PhotonNetwork.JoinOrCreateRoom(roomName, option, TypedLobby.Default);
     }
 }

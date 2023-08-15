@@ -5,8 +5,8 @@ using Photon.Pun;
 using Photon.Realtime;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 
-
-public class PlayerData : Singleton<PlayerData>
+//사용안함
+public class PlayerData : MonoBehaviour
 {
 
     [SerializeField] private PlayTypes playType;

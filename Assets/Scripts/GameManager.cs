@@ -18,19 +18,17 @@ public class GameManager : MonoBehaviourPun
 {
     public static GameManager Instance = null;
 
-    [SerializeField] CanvasGroup state_cg;
-    [SerializeField] CanvasGroup loading_cg;
-    [SerializeField] TextMeshProUGUI state_txt;
+    [SerializeField] private CanvasGroup state_cg;
+    [SerializeField] private CanvasGroup loading_cg;
+    [SerializeField] private TextMeshProUGUI state_txt;
 
-    [SerializeField] UIGroup uiGroup;
-    [SerializeField] PlayUIGroup playUIGroup;
-    [SerializeField] Button lobby_btn;
+    [SerializeField] private UIGroup uiGroup;
+    [SerializeField] private PlayUIGroup playUIGroup;
+    [SerializeField] private Button lobby_btn;
 
     [SerializeField] public AnimationCurve curve;
 
     public PhotonView pv;
-
-    public string userNickName;
 
     public enum GameState
     {
@@ -43,6 +41,7 @@ public class GameManager : MonoBehaviourPun
     }
 
     public GameState gameState;
+
     private bool isPlaying = false;          //각 state 상태가 진행 중인지( 선택중, 이동 중 등)
     public bool IsPlaying
     {
@@ -76,11 +75,9 @@ public class GameManager : MonoBehaviourPun
         set => playType = value;
     }
 
-    public void SetPlayerData(int _index)
+    public void SetPlayerData(int typeIndex)
     {
-        playType = (PlayTypes)_index;
-
-        Debug.Log(master() + " play type " + (PlayTypes)_index);
+        playType = (PlayTypes)typeIndex;
     }
 
     [SerializeField] private string jack_name;
@@ -106,7 +103,7 @@ public class GameManager : MonoBehaviourPun
 
     List<PlayTypes> odd_turn = new List<PlayTypes> { PlayTypes.COP, PlayTypes.JACK, PlayTypes.JACK, PlayTypes.COP };    //홀수 턴
     List<PlayTypes> even_turn = new List<PlayTypes> { PlayTypes.JACK, PlayTypes.COP, PlayTypes.COP, PlayTypes.JACK };   //짝수 턴
-    string turn_name;                                   //현재 차례인 플레이 타입
+    private string turn_name;                                   //현재 차례인 플레이 타입
 
     public bool master() => PhotonNetwork.LocalPlayer.IsMasterClient;
 
@@ -125,9 +122,9 @@ public class GameManager : MonoBehaviourPun
 
         pv = GetComponent<PhotonView>();
 
-        loading_cg.alpha = 1f;          //플레이 인원 다 들어올때까지 활성화
+        loading_cg.alpha = 1f;          //플레이 인원 다 들어올 때까지 활성화
 
-        playType = PlayTypes.NONE;      //정해지기전은 아무것도 아닌 상태로
+        playType = PlayTypes.NONE;      //아무것도 아닌 상태로
 
         round_cur = 1;
         turn_cur = 0;
@@ -173,8 +170,8 @@ public class GameManager : MonoBehaviourPun
 
         if (round_cur % 2 == 1)   //홀수 라운드
         {
-            myTurn = playType == odd_turn[turn_cur - 1];          
-            if(odd_turn[turn_cur -1] == PlayTypes.COP)
+            myTurn = playType == odd_turn[turn_cur - 1];
+            if (odd_turn[turn_cur - 1] == PlayTypes.COP)
             {
                 turn_name = "경찰";
             }
@@ -205,7 +202,6 @@ public class GameManager : MonoBehaviourPun
     /// <returns></returns>
     IEnumerator IEStateUpdate()
     {
-        //대기 화면 알파 0
         yield return StartCoroutine(loading_cg.IEAlpha(curve, false, 3f));
 
         while (true)
@@ -226,7 +222,7 @@ public class GameManager : MonoBehaviourPun
                 }
                 else
                 {
-                    state_txt.text = "라운드 : " + round_cur + "\n" + turn_name + " 차례 " + turn_cur + " 번째 턴";  
+                    state_txt.text = "라운드 : " + round_cur + "\n" + turn_name + " 차례 " + turn_cur + " 번째 턴";
                     yield return StartCoroutine(IEStateTextUpdate());
 
                     gameState = GameState.SELECT;
@@ -284,31 +280,12 @@ public class GameManager : MonoBehaviourPun
             }
             else if (gameState == GameState.DONE)
             {
-                if (round_cur == round_max)
+                if (round_cur == round_max && turn_cur == turn_max)
                 {
                     //잭 승리 (끝날때까지 잡히지 않았음)
-                    if (turn_cur == turn_max)
-                    {
-                        GameOver(true);
-                        break;
-                    }
-                    Debug.Log("end");
+                    GameOver(true);
+                    break;
                 }
-                //else
-                //{
-                //    //if (turn_cur <= turn_max)
-                //    {
-                //        gameState = GameState.START;
-                //        isPlaying = true;
-                //    }
-                //    //else
-                //    //{
-                //    //    state_txt.text = "턴 종료";
-                //    //    yield return StartCoroutine(IEStateTextUpdate());
-
-                //    //    isPlaying = false;
-                //    //}
-                //}
 
                 gameState = GameState.START;
                 isPlaying = true;
@@ -332,11 +309,10 @@ public class GameManager : MonoBehaviourPun
     }
     #endregion
 
-    public void GameOver(bool _jackWin)
+    public void GameOver(bool jackWin)
     {
-        if (_jackWin == true)
+        if (jackWin == true)
         {
-            //잭 승리
             state_txt.text = "잭 승리 \n잭 : " + jack_name;
         }
         else
@@ -359,8 +335,6 @@ public class GameManager : MonoBehaviourPun
     [PunRPC]
     private void MoveLobby()
     {
-        Debug.Log("move lobby");
         PhotonNetwork.LeaveRoom();
     }
-
 }

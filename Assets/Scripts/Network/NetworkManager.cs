@@ -11,7 +11,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     private string userId = "user";
 
     public TextMeshProUGUI statusText;
-    public TMP_InputField roomInput, userIdInput;
+    public TMP_InputField roomInput;
+    public TMP_InputField userIdInput;
 
     Dictionary<string, GameObject> room_dictionary = new Dictionary<string, GameObject>();
     public GameObject room_prefab;
@@ -89,18 +90,22 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         PhotonNetwork.JoinOrCreateRoom(roomInput.text, new RoomOptions { MaxPlayers = 2 }, null);               
     }
+
     public void JoinRandomRoom()
     {
         PhotonNetwork.JoinRandomRoom();
     }
+
     public void LeaveRoom()
     {
         PhotonNetwork.LeaveRoom();
     }
+
     public override void OnCreatedRoom()
     {
         Debug.Log("방만들기완료");
     }
+
     public override void OnJoinedRoom()
     {
         Debug.Log("방참가완료");
@@ -110,14 +115,17 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             PhotonNetwork.LoadLevel("MainScene");
         }
     }
+
     public override void OnCreateRoomFailed(short returnCode, string message)
     {
         Debug.Log("방만들기실패");
     }
+
     public override void OnJoinRoomFailed(short returnCode, string message)
     {
         Debug.Log("방참가실패");
     }
+
     public override void OnJoinRandomFailed(short returnCode, string message)
     {
         Debug.Log("방랜덤참가실패");
@@ -166,8 +174,6 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         }
     }
 
-
-    //https://ojui.tistory.com/41
     public void OnRandomBtn()
     {
         if (string.IsNullOrEmpty(userIdInput.text))
@@ -181,6 +187,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         PhotonNetwork.JoinRandomRoom();
     }
 
+#if UNITY_EDITOR
     [ContextMenu("정보")]
     void Info()
     {
@@ -206,4 +213,5 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             Debug.Log("연결됐는지? : " + PhotonNetwork.IsConnected);
         }
     }
+#endif
 }

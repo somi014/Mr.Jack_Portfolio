@@ -16,19 +16,18 @@ public class TileInfo : MonoBehaviour
 {
     public TilemapType type;
 
-    public int moveIndex; //캐릭터를 기준으로 몇번째 칸인지
+    public int moveIndex;                       //캐릭터를 기준으로 몇번째 칸인지
 
     public Vector3Int tile_pos { get; set; }
 
-    //캐릭터 유무, 정보
-    public bool character_isOn { get; set; }
+    public bool character_isOn { get; set; }    //캐릭터 유무, 정보
+ 
     public string character_name { get; set; }
 
     // 가로등, 맨홀 활성화 유무
     public bool isActive { get; set; }
 
     //라운드에 따라 비활성화될 가로등 순서
-    //deleteLight_list를 여기에 넣고 tile_pos에 따라서 넘버링?
     public int light_num { get; set; }
 
     //이동 가능한 상태인지
@@ -53,10 +52,9 @@ public class TileInfo : MonoBehaviour
         }
     }
 
-    public Tile[] selectTiles { get; set; } //가로등, 맨홀 상태에 따른 타일 리스트
-    public Tile selectTile
+    public Tile[] selectTiles { get; set; }     //가로등, 맨홀 상태에 따른 타일 리스트
+    public Tile selectTile                     //탈출구면 비활성화 상태일 때 탈출하기 문구 띄우기
     {
-        //탈출구면 비활성화 상태일 때 탈출하기 버튼? 문구 띄우기
         get
         {
             if (isActive == true)

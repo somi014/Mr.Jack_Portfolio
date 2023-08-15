@@ -28,5 +28,4 @@ public class CharaterCard : MonoBehaviour
         get => isSelected;
         set => isSelected = value;
     }
-
 }

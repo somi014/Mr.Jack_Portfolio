@@ -5,9 +5,9 @@ using UnityEngine.UI;
 
 public class TitleBackground : MonoBehaviour
 {
-    Material mat;
+    private Material mat;
     [SerializeField] private float speed;
-    float offSetY;
+    private float offSetY;
 
     private void Awake()
     {

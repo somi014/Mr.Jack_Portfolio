@@ -11,26 +11,26 @@ public class PlayUIGroup : MonoBehaviourPun
 {
     public static PlayUIGroup Instance = null;
 
-    PhotonView pv;
+    private PhotonView pv;
 
-    CanvasGroup backgroud_cg;
+    private CanvasGroup backgroud_cg;
 
-    Transform select_playType_tr;
-    Button[] playType_btn;
+    private Transform select_playType_tr;
+    private Button[] playType_btn;
 
-    Transform redCard_tr;
-    Button[] redCard_btn;
-    Image[] redCard_img;
+    private Transform redCard_tr;
+    private Button[] redCard_btn;
+    private Image[] redCard_img;
 
-    Transform greenCard_tr;
-    Button[] greenCard_btn;
-    Image[] greenCard_img;
+    private Transform greenCard_tr;
+    private Button[] greenCard_btn;
+    private Image[] greenCard_img;
 
-    Transform jackImage_tr;
-    Image jack_img;
+    private Transform jackImage_tr;
+    private Image jack_img;
 
-    Button move_btn;
-    Button skill_btn;
+    private Button move_btn;
+    private Button skill_btn;
 
     private int[] redCard_index;                    //알리바이 카드 순서
     public int[] RedCard_Index
@@ -73,12 +73,12 @@ public class PlayUIGroup : MonoBehaviourPun
         set => skill_done = value;
     }
 
-    [SerializeField] Sprite[] innocentCard_img;
-    [SerializeField] Sprite[] characterCard_img;
-    [SerializeField] Sprite[] jackCard_img;         //0 exposed 1 unexposed
-    [SerializeField] CharacterInfo[] charInfo;
+    [SerializeField] private Sprite[] innocentCard_img;
+    [SerializeField] private Sprite[] characterCard_img;
+    [SerializeField] private Sprite[] jackCard_img;         //0 exposed 1 unexposed
+    [SerializeField] private CharacterInfo[] charInfo;
 
-    [SerializeField] Sprite[] playType_img;         //0 cop,  1 jack
+    [SerializeField] private Sprite[] playType_img;         //0 cop,  1 jack
     [SerializeField] public AnimationCurve curve;
 
     private void Awake()
@@ -184,8 +184,6 @@ public class PlayUIGroup : MonoBehaviourPun
         {
             playType_btn[i].interactable = true;
         }
-
-        Debug.Log("btn active");
         yield break;
     }
 
@@ -194,9 +192,7 @@ public class PlayUIGroup : MonoBehaviourPun
     /// </summary>
     public void OnClickPlayType(int _index)
     {
-        //미리 정해둔 플레이어의 타입을 반환하기로!
         playType_btn[_index].transform.GetComponentInChildren<TextMeshProUGUI>().text = GameManager.Instance.PlayType.ToString();
-
         playType_btn[_index].GetComponent<Image>().sprite = playType_img[(int)GameManager.Instance.PlayType];
 
         pv.RPC(nameof(SyncTypeCard), RpcTarget.AllBufferedViaServer, _index);
@@ -324,7 +320,7 @@ public class PlayUIGroup : MonoBehaviourPun
 
     public void OnClickRedCard(int _index)
     {
-        //선택했던 카드는 클릭 안되도록...
+        //선택했던 카드는 클릭 안되도록
         if (redCard_btn[_index].GetComponent<CharaterCard>().IsSelected == true)
         {
             return;
@@ -376,8 +372,8 @@ public class PlayUIGroup : MonoBehaviourPun
 
         if (GameManager.Instance.gameState == GameManager.GameState.CARDACTION)
         {
-            backgroud_cg.blocksRaycasts = false;                                //선택 끝나면 true(다른 UI 클릭 가능하도록)
-            GameManager.Instance.gameState = GameManager.GameState.CHECK;        //셜록 카드 스킬 썼을 때   
+            backgroud_cg.blocksRaycasts = false;                                    //선택 끝나면 true(다른 UI 클릭 가능하도록)
+            GameManager.Instance.gameState = GameManager.GameState.CHECK;           //셜록 카드 스킬 썼을 때   
         }
         else
         {
@@ -483,14 +479,12 @@ public class PlayUIGroup : MonoBehaviourPun
 
     public void OnClickGreenCard(int _index)
     {
-        //현재 차례인 플레이어만 클릭!
         bool myTurn = GameManager.Instance.MyTurn;
         if (myTurn == false)
         {
             return;
         }
 
-        //선택했던 카드는 클릭 안되도록...
         if (greenCard_btn[_index].GetComponent<CharaterCard>().IsSelected == true)
         {
             return;
@@ -533,20 +527,22 @@ public class PlayUIGroup : MonoBehaviourPun
         }
         else
         {
-            //캐릭터 이동, 스킬 버튼 활성화
-            if (order == SkillOrder.Both || order == SkillOrder.Select)
+            switch (order)              //캐릭터 이동, 스킬 버튼 활성화
             {
-                move_btn.interactable = true;
-                skill_btn.interactable = true;
-            }
-            else if (order == SkillOrder.NONE)
-            {
-                skill_done = true;
-                pv.RPC(nameof(SycnReadyTile), RpcTarget.AllBufferedViaServer);
-            }
-            else if (order == SkillOrder.After)
-            {
-                pv.RPC(nameof(SycnReadyTile), RpcTarget.AllBufferedViaServer);
+                case SkillOrder.NONE:
+                    skill_done = true;
+                    pv.RPC(nameof(SycnReadyTile), RpcTarget.AllBufferedViaServer);
+                    break;
+                case SkillOrder.After:
+                    pv.RPC(nameof(SycnReadyTile), RpcTarget.AllBufferedViaServer);
+                    break;
+                case SkillOrder.Both:
+                case SkillOrder.Select:
+                    move_btn.interactable = true;
+                    skill_btn.interactable = true;
+                    break;
+                default:
+                    break;
             }
         }
 
@@ -606,10 +602,10 @@ public class PlayUIGroup : MonoBehaviourPun
 
         switch (selectChar_name)
         {
-            case "Lestrade":            //경찰 저지선 이동
-            case "Bert":                //맨홀 타일 이동
-            case "Smith":               //가로등 타일 이동
-            case "Goodley":             //다른 캐릭터 자기쪽으로 이동시키기
+            case "Lestrade":                //경찰 저지선 이동
+            case "Bert":                    //맨홀 타일 이동
+            case "Smith":                   //가로등 타일 이동
+            case "Goodley":                 //다른 캐릭터 자기쪽으로 이동시키기
                 TileManager.Instance.SyncCharSkill();
                 break;
             case "Gull":                   //다른 캐릭터와 위치 변경  (이동 안하게됨)
@@ -634,14 +630,13 @@ public class PlayUIGroup : MonoBehaviourPun
     {
         bool temp_turn = GameManager.Instance.MyTurn;
         if (move_done == false)
-            OnClickMove();          //이동하기
-
-        //스킬 완료
-        if (skill_done == false)
         {
-            //스킬 사용하기
-            if (temp_turn == true)
-                OnClickSkill();
+            OnClickMove();          //이동하기
+        }
+
+        if (skill_done == false && temp_turn == true)
+        {
+            OnClickSkill();         //스킬 사용하기
         }
 
         //이동, 스킬 완료 상태
@@ -657,33 +652,18 @@ public class PlayUIGroup : MonoBehaviourPun
     /// 카드 선택 중 ui 누르면 내려가기
     /// </summary>
     /// param name="_ui" true : ui 버튼 클릭(ui 열림)
-    public void UIPopupCheck(bool _ui)
+    public void UIPopupCheck(bool on)
     {
+        StartCoroutine(backgroud_cg.IEAlpha(curve, on, 5f));
+
+        Vector3 uiSize = on == false ? Vector3.zero : Vector3.one;
         if (redCard_open == true)
         {
-            if (_ui == false)
-            {
-                StartCoroutine(backgroud_cg.IEAlpha(curve, false, 5f));
-                StartCoroutine(redCard_tr.transform.IESetScale(curve, Vector3.zero, 5f));
-            }
-            else
-            {
-                StartCoroutine(backgroud_cg.IEAlpha(curve, true, 5f));
-                StartCoroutine(redCard_tr.transform.IESetScale(curve, Vector3.one, 5f));
-            }
+            StartCoroutine(redCard_tr.transform.IESetScale(curve, uiSize, 5f));
         }
         else if (greenCard_open == true)
         {
-            if (_ui == false)
-            {
-                StartCoroutine(backgroud_cg.IEAlpha(curve, false, 5f));
-                StartCoroutine(greenCard_tr.transform.IESetScale(curve, Vector3.zero, 5f));
-            }
-            else
-            {
-                StartCoroutine(backgroud_cg.IEAlpha(curve, true, 5f));
-                StartCoroutine(greenCard_tr.transform.IESetScale(curve, Vector3.one, 5f));
-            }
+            StartCoroutine(greenCard_tr.transform.IESetScale(curve, uiSize, 5f));
         }
     }
 

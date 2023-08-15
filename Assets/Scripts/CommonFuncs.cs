@@ -2,32 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Singleton<T> : MonoBehaviour where T : class, new()
-{
-    protected static T instance = null;
-
-    public static T Instance
-    {
-        get
-        {
-            if (instance == null)
-            {
-                instance = new T();
-            }
-            return instance;
-        }
-    }
-    private void Awake()
-    {
-        Debug.Log("singleton awake");
-        if (instance != null)
-        {
-            Destroy(this);
-        }
-        DontDestroyOnLoad(this);
-    }
-}
-
 namespace CommonFunctions
 {
     public static class CommonFuncs
@@ -37,15 +11,15 @@ namespace CommonFunctions
         public static string selectCharReceive = "SelectCharReceive";
         public static string checkRecive = "CheckRecive";
 
-        public static T FindGameObject<T>(this Transform _parent, string _name) where T : Component
+        public static T FindGameObject<T>(this Transform parent, string objName) where T : Component
         {
             GameObject result = null;
-            var childList = new List<T>();
-            _parent.GetComponentsInChildren(true, childList);
+            List<T> childList = new List<T>();
+            parent.GetComponentsInChildren(true, childList);
 
             foreach (var child in childList)
             {
-                if (child.gameObject.name == _name)
+                if (child.gameObject.name == objName)
                 {
                     result = child.gameObject;
                     break;
@@ -62,15 +36,15 @@ namespace CommonFunctions
             }
         }
 
-        public static GameObject FindGameObject(this Transform _parent, string _name)
+        public static GameObject FindGameObject(this Transform parent, string objName)
         {
             GameObject result = null;
-            var childList = new List<Transform>();
-            _parent.GetComponentsInChildren<Transform>(true, childList);
+            List<Transform> childList = new List<Transform>();
+            parent.GetComponentsInChildren<Transform>(true, childList);
 
             foreach (var child in childList)
             {
-                if (child.gameObject.name == _name)
+                if (child.gameObject.name == objName)
                 {
                     result = child.gameObject;
                     break;
@@ -143,49 +117,49 @@ namespace CommonFunctions
         /// <param name="_on"></param>
         /// <param name="_speed"></param>
         /// <returns></returns>
-        public static IEnumerator IEAlpha(this CanvasGroup _cg, AnimationCurve _curve, bool _on, float _speed = 1)
+        public static IEnumerator IEAlpha(this CanvasGroup cg, AnimationCurve curve, bool on, float speed = 1)
         {
-            float targetTime = _curve.GetPlayTime();
+            float targetTime = curve.GetPlayTime();
             float curTime = 0;
-            float origin = _cg.alpha;
+            float origin = cg.alpha;
 
             while (curTime <= targetTime)
             {
-                float scalar = _curve.Evaluate(curTime);
-                if (_on == true)
+                float scalar = curve.Evaluate(curTime);
+                if (on == true)
                 {
-                    _cg.alpha = origin + (1 * scalar);
+                    cg.alpha = origin + (1 * scalar);
                 }
                 else
                 {
-                    _cg.alpha = origin - (1 * scalar);
+                    cg.alpha = origin - (1 * scalar);
                 }
 
                 yield return null;
 
-                curTime += Time.deltaTime * _speed;
+                curTime += Time.deltaTime * speed;
             }
-            _cg.alpha = _on == true ? 1f : 0f;
+            cg.alpha = on == true ? 1f : 0f;
         }
 
-        public static IEnumerator IEMove(this Transform _transform, AnimationCurve _curve, Vector3 _target, float _speed = 1)
+        public static IEnumerator IEMove(this Transform trans, AnimationCurve curve, Vector3 target, float speed = 1)
         {
-            float targetTime = _curve.GetPlayTime();
+            float targetTime = curve.GetPlayTime();
             float curTime = 0;
-            Vector3 originPos = _transform.position;
-            Vector3 gab = _target - originPos;
+            Vector3 originPos = trans.position;
+            Vector3 gab = target - originPos;
 
             while (curTime <= targetTime)
             {
-                float scalar = _curve.Evaluate(curTime);
-                _transform.position = Vector3.Lerp(originPos, _target, scalar);
+                float scalar = curve.Evaluate(curTime);
+                trans.position = Vector3.Lerp(originPos, target, scalar);
 
                 yield return null;
 
-                curTime += Time.deltaTime * _speed;
+                curTime += Time.deltaTime * speed;
             }
 
-            _transform.position = _target;
+            trans.position = target;
 
         }
 

@@ -11,15 +11,15 @@ using TMPro;
 /// </summary>
 public class CharacterTile : MonoBehaviour
 {
-    Image exposed_img;          //가로등, 손전등, 캐릭터에 노출된 이미지
-    Image unexposed_img;
+    private Image exposed_img;          //가로등, 손전등, 캐릭터에 노출된 이미지
+    private Image unexposed_img;
 
-    Image active_img;           //선택 가능 활성화
+    private Image active_img;           //선택 가능 활성화
 
-    GameObject des_go;
-    TextMeshProUGUI des_txt;    
+    private GameObject des_go;
+    private TextMeshProUGUI des_txt;
 
-    RectTransform handLight_rt;
+    private RectTransform handLight_rt;
     private int handLight_direct = 0;
     public int HandLight_Direct { get => handLight_direct; }
 
@@ -69,18 +69,18 @@ public class CharacterTile : MonoBehaviour
         unexposed_img.enabled = !isExposed;
     }
 
-    public void SetPos(Vector3 _pos)
+    public void SetPos(Vector3 pos)
     {
-        transform.position = _pos;
+        transform.position = pos;
     }
 
     /// <summary>
     /// Watson 손전등 방향 바꾸기
     /// </summary>
     /// <param name="_index"></param>
-    public void HandLightPos(int _index)
+    public void HandLightPos(int dirIndex)
     {
-        switch (_index)
+        switch (dirIndex)
         {
             case 0:
                 handLight_rt.rotation = Quaternion.Euler(0, 0, 90f);
@@ -101,13 +101,12 @@ public class CharacterTile : MonoBehaviour
                 handLight_rt.rotation = Quaternion.Euler(0, 0, -210);
                 break;
         }
-        handLight_direct = _index;
+        handLight_direct = dirIndex;
     }
 
     public void SetText()
     {
         des_txt.text = "검거하기";
-
         des_go.SetActive(true);
     }
 }

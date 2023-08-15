@@ -10,13 +10,9 @@ public class MultiManager : MonoBehaviourPunCallbacks
 {
     PhotonView pv;
 
-    bool received;
-
     private void Awake()
     {
         pv = GetComponent<PhotonView>();
-
-        received = false;
 
         Hashtable hash = PhotonNetwork.CurrentRoom.CustomProperties;
         hash[CommonFuncs.redReceive] = false;
@@ -50,16 +46,6 @@ public class MultiManager : MonoBehaviourPunCallbacks
             int temp_rand = Random.Range(0, 2);
             GameManager.Instance.pv.RPC(nameof(GameManager.Instance.SetPlayType), RpcTarget.AllBufferedViaServer, temp_rand);
         }
-    }
-
-    public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
-    {
-        base.OnPlayerPropertiesUpdate(targetPlayer, changedProps);
-
-        if (!PhotonNetwork.IsMasterClient)
-            return;
-        if (!changedProps.ContainsKey("Word"))
-            return;
     }
 
     public override void OnLeftRoom()
